@@ -6,27 +6,27 @@ import sys
 currPage = None
 currOutLinks = None
 incomingPageRankSum = 0
-numNodes = None
+# numNodes = None
 
 dampingFactor = 0.85
 
 def processInfo(info : str, 
-              incomingPageRankSum : float, 
-              numNodes : int, 
-              currOutLinks : str):
+                incomingPageRankSum : float, 
+                # numNodes : int, 
+                currOutLinks : str):
     """
     Returns:
-        a tuple of updated values of incomingPageRankSum, numNodes, currOutLinks
+        a tuple of updated values of incomingPageRankSum, currOutLinks
     """
     info = info.split('\t', maxsplit=1)
     if len(info) == 1: # info contains an incoming page rank
         incomingPageRankSum += float(info[0])
     else: # info contains the current page info
-        if info[0] == 'numNodes': # info contains the number of nodes
-            numNodes = int(info[1])
-        else: # info contains the outgoing links
-            currOutLinks = info[1]
-    return incomingPageRankSum, numNodes, currOutLinks
+        # if info[0].strip() == 'numNodes': # info contains the number of nodes
+        #     numNodes = int(info[1])
+        # else: # info contains the outgoing links
+        currOutLinks = info[1].strip()
+    return incomingPageRankSum, currOutLinks
 
 for line in sys.stdin:
     line = line.strip()
@@ -36,14 +36,15 @@ for line in sys.stdin:
     page, info = line.split('\t', maxsplit=1)
 
     if page == currPage:
-        incomingPageRankSum, numNodes, currOutLinks = processInfo(info, incomingPageRankSum, numNodes, currOutLinks)
+        incomingPageRankSum, currOutLinks = processInfo(info, incomingPageRankSum, currOutLinks)
     else:
         if currPage is not None:
-            print(f'{currPage}\t{(1-dampingFactor)/numNodes + dampingFactor * incomingPageRankSum}\t{currOutLinks}')
+            print(f'{currPage}\t{(1-dampingFactor) + dampingFactor * incomingPageRankSum}\t{currOutLinks}')
         
         currPage = page
         incomingPageRankSum = 0
         currOutLinks = None
 
-        incomingPageRankSum, numNodes, currOutLinks = processInfo(info, incomingPageRankSum, numNodes, currOutLinks)
-print(f'{currPage}\t{(1-dampingFactor)/numNodes + dampingFactor * incomingPageRankSum}\t{currOutLinks}')
+        # update using current info
+        incomingPageRankSum, currOutLinks = processInfo(info, incomingPageRankSum, currOutLinks)
+print(f'{currPage}\t{(1-dampingFactor) + dampingFactor * incomingPageRankSum}\t{currOutLinks}')
