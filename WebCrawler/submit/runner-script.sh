@@ -12,6 +12,7 @@ chmod +x reducer_1.py
 chmod +x mapper_2.py
 chmod +x reducer_2.py
 chmod +x reducer_3.py
+chmod +x library.mod
 
 
 # Assign arguments to variables
@@ -70,7 +71,7 @@ i=1
 while [ "$i" -le $depth ]; do
 
     mapred streaming \
-        -files "mapper_1.py,reducer_1.py" \
+        -files "mapper_1.py,reducer_1.py,library.mod" \
         -input "$HDFS_INPUT_DIR/input_$((i-1)).txt" \
         -output "$HDFS_TEMP_DIR/output_$i" \
         -mapper "mapper_1.py" \

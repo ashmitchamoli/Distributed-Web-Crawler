@@ -1,8 +1,11 @@
-#!/usr/bin/env python3
-# -*-coding:utf-8 -*
-
 import sys
 import requests
+import zipimport
+
+importer = zipimport.zipimporter(
+    'D:\Prisha\SEM 6\DS\DS_SEM6\Distributed-Web-Crawler\WebCrawler\submit\library.mod'
+)
+bs4 = importer.load_module('bs4')
 from bs4 import BeautifulSoup
 
 
