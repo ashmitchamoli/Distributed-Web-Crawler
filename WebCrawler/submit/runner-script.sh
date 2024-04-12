@@ -1,11 +1,10 @@
-#!/usr/bin/env sh
+#!/usr/bin/bash
 
 # Check if the correct number of arguments are provided
 if [ "$#" -ne 3 ]; then
     echo "Usage: $0 <LOCAL_INPUT_DIR> <HDFS_INPUT_DIR> <HDFS_OUTPUT_DIR>"
     exit 1
 fi
-
 
 chmod +x mapper_1.py
 chmod +x reducer_1.py
@@ -20,6 +19,8 @@ LOCAL_INPUT=$1
 HDFS_INPUT_DIR=$2
 HDFS_OUTPUT_DIR=$3
 HDFS_TEMP_DIR=helper
+
+hadoop fs -rm -r "$HDFS_TEMP_DIR"
 
 # Function to create HDFS directory if it doesn't exist
 if ! hadoop fs -test -d "$HDFS_INPUT_DIR"; then
@@ -48,8 +49,6 @@ input_0="input.txt"
 output_file="input_0.txt"
 hadoop fs -put "input_0.txt" "$HDFS_INPUT_DIR/"
 
-
-
 # Read input.txt line by line
 while IFS= read -r line || [ -n "$line" ]; do
     # Split the line into URL and depth
@@ -71,7 +70,7 @@ i=1
 while [ "$i" -le $depth ]; do
 
     mapred streaming \
-        -files "mapper_1.py,reducer_1.py,library.mod" \
+        -files "mapper_1.py,reducer_1.py,library.mod,requests.mod" \
         -input "$HDFS_INPUT_DIR/input_$((i-1)).txt" \
         -output "$HDFS_TEMP_DIR/output_$i" \
         -mapper "mapper_1.py" \
@@ -97,6 +96,6 @@ while [ "$i" -le $depth ]; do
 done
 
 # Concatenate the output files and save to main_out.txt
-hdfs dfs -cat "/outputt_*/p*" > main_out.txt
-hdfs dfs -rm -r "$HDFS_TEMP_DIR"
-hdfs dfs -rm -r "$HDFS_INPUT_DIR"
+# hdfs dfs -cat "/outputt_*/p*" > main_out.txt
+# hdfs dfs -rm -r "$HDFS_TEMP_DIR"
+# hdfs dfs -rm -r "$HDFS_INPUT_DIR"

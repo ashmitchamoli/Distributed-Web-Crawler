@@ -1,18 +1,32 @@
+#!/usr/bin/env python3
+# -*-coding:utf-8 -*
+
 import sys
-import requests
 import zipimport
 
+# print("Hello", 0)
+
 importer = zipimport.zipimporter(
-    'D:\Prisha\SEM 6\DS\DS_SEM6\Distributed-Web-Crawler\WebCrawler\submit\library.mod'
+    'library.mod'
+)
+reqImporter = zipimport.zipimporter(
+	'requests.mod'
 )
 bs4 = importer.load_module('bs4')
-from bs4 import BeautifulSoup
+# reqs = reqImporter.load_module('requests')
+# from bs4 import BeautifulSoup
+BeautifulSoup = bs4.BeautifulSoup
+import http.client
 
+# print("Hello", 1)
 
 def scrape_urls(url):
     try:
-        response = requests.get(url)
-        soup = BeautifulSoup(response.text, 'html.parser')
+        conn = http.client.HTTPSConnection(url)
+        conn.request("GET", "/")
+        response = conn.getresponse()
+        soup = BeautifulSoup(response.read(), 'html.parser')
+        conn.close()
         links = soup.find_all('a')
         urls = []
         for link in links:
