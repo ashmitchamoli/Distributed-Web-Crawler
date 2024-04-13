@@ -7,5 +7,5 @@ for line in sys.stdin:
         print(*line)
     else:
         for k in line[1:]:
-            print(line[0], k)
+            print(line[0],k)
         print(line[0], 1)

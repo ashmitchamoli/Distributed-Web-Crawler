@@ -7,4 +7,4 @@ for line in sys.stdin:
         # print(line[0], line[0])
         continue
     if line[1] not in {'0', '1'}:
-        print(line[0], line[1])
+        print(line[0],line[1])

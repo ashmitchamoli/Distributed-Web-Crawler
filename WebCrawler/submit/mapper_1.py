@@ -16,28 +16,27 @@ bs4 = importer.load_module('bs4')
 # reqs = reqImporter.load_module('requests')
 # from bs4 import BeautifulSoup
 BeautifulSoup = bs4.BeautifulSoup
+from urllib.request import urlopen
+from urllib.parse import urlparse
 import http.client
 
 # print("Hello", 1)
 
 def scrape_urls(url):
     try:
-        conn = http.client.HTTPSConnection(url)
-        conn.request("GET", "/")
-        response = conn.getresponse()
-        soup = BeautifulSoup(response.read(), 'html.parser')
-        conn.close()
-        links = soup.find_all('a')
-        urls = []
-        for link in links:
-            href = link.get('href')
-            if href and (href.startswith('http://')
-                         or href.startswith('https://')):
-                urls.append(href)
-        return list(set(urls))
+        with urlopen(url) as response:
+            soup = BeautifulSoup(response.read(), 'html.parser')
+            links = soup.find_all('a')
+            urls = []
+            for link in links:
+                href = link.get('href')
+                if href:
+                    parsed_href = urlparse(href)
+                    if parsed_href.scheme in ('http', 'https'):
+                        urls.append(href)
+            return list(set(urls))
     except:
         return []
-
 
 for line in sys.stdin:
     line = line.strip()
@@ -46,7 +45,7 @@ for line in sys.stdin:
         page = page[:-1]
     if state == '0':
         state = int(state)
-    if state == 0:  #not crawled
+    if state == 0: #not crawled
         print(page, state)
         urls = scrape_urls(page)
         if len(urls) == 0:
