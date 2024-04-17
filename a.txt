@@ -1,24 +1,27 @@
-import os
-import shutil
+#!/bin/bash
 
-def merge_folders(source_folders, destination_folder):
-    for source_folder in source_folders:
-        for filename in os.listdir(source_folder):
-            source_path = os.path.join(source_folder, filename)
-            # Construct a unique name for the file to avoid conflicts
-            unique_filename = os.path.splitext(filename)[0] + '_' + os.path.basename(source_folder) + os.path.splitext(filename)[1]
-            destination_path = os.path.join(destination_folder, unique_filename)
-            # Move the file to the destination folder
-            shutil.move(source_path, destination_path)
-            print(f"Moved {filename} from {source_folder} to {destination_path}")
+merge_folders() {
+    for source_folder in "$@"; do
+        for filename in "$source_folder"/*; do
+            if [ -e "$filename" ]; then
+                base=$(basename -- "$filename")
+                extension="${base##*.}"
+                filename_noext="${base%.*}"
+                unique_filename="${filename_noext}_${source_folder##*/}.${extension}"
+                destination_path="$2/$unique_filename"
+                mv "$filename" "$destination_path"
+                echo "Moved $base from $source_folder to $destination_path"
+            fi
+        done
+    done
+}
 
 # Replace these paths with your actual folder paths
-source_folders = ["/path/to/source/folder1", "/path/to/source/folder2", "/path/to/source/folder3"]
-destination_folder = "/path/to/destination/folder"
+source_folders=("/path/to/source/folder1" "/path/to/source/folder2" "/path/to/source/folder3")
+destination_folder="/path/to/destination/folder"
 
 # Create the destination folder if it doesn't exist
-if not os.path.exists(destination_folder):
-    os.makedirs(destination_folder)
+mkdir -p "$destination_folder"
 
 # Merge files from all source folders to the destination folder
-merge_folders(source_folders, destination_folder)
+merge_folders "${source_folders[@]}" "$destination_folder"

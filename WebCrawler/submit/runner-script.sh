@@ -96,14 +96,31 @@ while [ "$i" -le $depth ]; do
     i=$(( i + 1 ))
 done
 
-# from here you need to run the last mapper that takes input as outputt folder.
-HDFS_FINAL_INPUT_DIR = final_input
-hdfs dfs -mkdir -p "$HDFS_FINAL_INPUT_DIR"
-hdfs dfs -cp "$HDFS_TEMP_DIR/outputt_*/part-*" "$HDFS_FINAL_INPUT_DIR"
 
+# Remove all folders with names output_i from hdfs_temp_dir
+hadoop fs -rm -r "$HDFS_TEMP_DIR/output_[1-9]*"
+
+# Iterate through the desired depth (you'll need to set this value)
+for ((i=1; i<=depth; i++)); do
+    # Iterate through files in output_i
+    for file in $(hadoop fs -ls "$HDFS_TEMP_DIR/outputt_$i" | awk '{print $8}'); do
+        # Extract the file name
+        filename=$(basename "$file")
+        # Create a new file name by appending folder name and file name
+        if [[ "$filename" != "_SUCCESS" ]]; then
+            # Create a new file name by appending folder name and file name
+            new_filename="output${i}_$filename"
+            # Copy the file to the helper directory
+            hadoop fs -cp "$file" "$HDFS_TEMP_DIR/$new_filename"
+        fi
+    done
+    # Remove original output_i folder
+    hadoop fs -rm -r "$HDFS_TEMP_DIR/outputt_$i"
+done
+HDFS_FINAL_OUTPUT_DIR=finall
 mapred streaming \
     -files "mapper_4.py,reducer_4.py" \
-    -input "$HDFS_FINAL_INPUT_DIR" \
+    -input "$HDFS_TEMP_DIR" \
     -output "$HDFS_FINAL_OUTPUT_DIR" \
     -mapper "mapper_4.py" \
     -reducer "reducer_4.py" \
