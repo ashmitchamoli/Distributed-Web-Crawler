@@ -101,6 +101,8 @@ done
 hadoop fs -rm -r "$HDFS_TEMP_DIR/output_[1-9]*"
 
 # Iterate through the desired depth (you'll need to set this value)
+hadoop fs -mkdir "temp_results"
+
 for ((i=1; i<=depth; i++)); do
     # Iterate through files in output_i
     for file in $(hadoop fs -ls "$HDFS_TEMP_DIR/outputt_$i" | awk '{print $8}'); do
@@ -115,8 +117,10 @@ for ((i=1; i<=depth; i++)); do
         fi
     done
     # Remove original output_i folder
+    hadoop fs -mv "$HDFS_TEMP_DIR/outputt_$i" "temp_results/outputt_$i"
     hadoop fs -rm -r "$HDFS_TEMP_DIR/outputt_$i"
 done
+
 HDFS_FINAL_OUTPUT_DIR=finall
 mapred streaming \
     -files "mapper_4.py,reducer_4.py" \
