@@ -20,6 +20,7 @@ HDFS_INPUT_DIR=$2
 HDFS_OUTPUT_DIR=$3
 HDFS_TEMP_DIR=helper
 
+
 hadoop fs -rm -r "$HDFS_TEMP_DIR"
 
 # Function to create HDFS directory if it doesn't exist
@@ -94,6 +95,19 @@ while [ "$i" -le $depth ]; do
         -numReduceTasks 3
     i=$(( i + 1 ))
 done
+
+# from here you need to run the last mapper that takes input as outputt folder.
+HDFS_FINAL_INPUT_DIR = final_input
+hdfs dfs -mkdir -p "$HDFS_FINAL_INPUT_DIR"
+hdfs dfs -cp "$HDFS_TEMP_DIR/outputt_*/part-*" "$HDFS_FINAL_INPUT_DIR"
+
+mapred streaming \
+    -files "mapper_4.py,reducer_4.py" \
+    -input "$HDFS_FINAL_INPUT_DIR" \
+    -output "$HDFS_FINAL_OUTPUT_DIR" \
+    -mapper "mapper_4.py" \
+    -reducer "reducer_4.py" \
+    -numReduceTasks 3
 
 # Concatenate the output files and save to main_out.txt
 # hdfs dfs -cat "/outputt_*/p*" > main_out.txt
