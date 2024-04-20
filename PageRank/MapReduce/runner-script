@@ -2,7 +2,8 @@
 
 STREAM_JAR=$1
 ITERATIONS=$2
-LOCAL_INP_DIR="./input/"
+# LOCAL_INP_DIR="./input/"
+LOCAL_INP_DIR=$3
 LOCAL_OUT_DIR="./output/"
 HDFS_INP="pagerank/input/"
 HDFS_OUT="pagerank/output/"

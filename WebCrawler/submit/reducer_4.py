@@ -13,13 +13,19 @@ def emit_adjacency_list(key, neighbors_set):
 for line in sys.stdin:
     line = line.strip()
     key, neighbor = line.split('\t', 1)
+    
+    neighborInfo = neighbor.split('\t', 1)
     if current_key == key:
-        neighbors_set.add(neighbor)  # Add neighbor to the set
+        if len(neighborInfo) == 1:
+            neighbors_set.add(neighborInfo[0])  # Add neighbor to the set
     else:
         if current_key:
             emit_adjacency_list(current_key, neighbors_set)
         current_key = key
-        neighbors_set = {neighbor}  # Initialize a new set for the current key
+        if len(neighborInfo) == 1:
+            neighbors_set = {neighborInfo[0]}  # Initialize a new set for the current key
+        else:
+            neighbors_set = set() # Initialize a new empty set for the current key
 
 if current_key:
     emit_adjacency_list(current_key, neighbors_set)

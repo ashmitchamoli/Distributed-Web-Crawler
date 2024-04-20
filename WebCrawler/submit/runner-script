@@ -130,6 +130,13 @@ mapred streaming \
     -reducer "reducer_4.py" \
     -numReduceTasks 3
 
+# bring final output directory to local output directory
+rm -r ./output
+mkdir ./output
+
+# move the contents of the final output directory to the local output directory
+hadoop fs -get "$HDFS_FINAL_OUTPUT_DIR" ./output
+
 # Concatenate the output files and save to main_out.txt
 # hdfs dfs -cat "/outputt_*/p*" > main_out.txt
 # hdfs dfs -rm -r "$HDFS_TEMP_DIR"
