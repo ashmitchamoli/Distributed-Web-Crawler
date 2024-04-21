@@ -1,5 +1,0 @@
-https://dstest1.w3spaces.com/files/indexd.html	0.5572916666666666	0
-https://dstest1.w3spaces.com/files/indexb.html	0.19250000000000003	2	https://dstest1.w3spaces.com/files/indexf.html	https://dstest1.w3spaces.com/files/indexc.html
-https://dstest1.w3spaces.com/index.html	0.15000000000000002	3	https://dstest1.w3spaces.com/files/indexb.html	https://dstest1.w3spaces.com/files/indexd.html	https://dstest1.w3spaces.com/files/indexc.html
-https://dstest1.w3spaces.com/files/indexc.html	0.3766666666666667	2	https://dstest1.w3spaces.com/files/indexd.html	https://dstest1.w3spaces.com/files/indexf.html
-https://dstest1.w3spaces.com/files/indexf.html	0.6989583333333332	0

@@ -73,7 +73,7 @@ i=1
 while [ "$i" -le $depth ]; do
 
     mapred streaming \
-        -files "mapper_1.py,reducer_1.py,library.mod,requests.mod" \
+        -files "mapper_1.py,reducer_1.py,library.mod" \
         -input "$HDFS_INPUT_DIR/input_$((i-1)).txt" \
         -output "$HDFS_TEMP_DIR/output_$i" \
         -mapper "mapper_1.py" \

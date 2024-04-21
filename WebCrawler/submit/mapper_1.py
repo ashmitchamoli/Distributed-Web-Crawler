@@ -1,11 +1,14 @@
+#!/usr/bin/env python3
+# -*-coding:utf-8 -*
+
 import sys
 import zipimport
+
 importer = zipimport.zipimporter('library.mod')
 bs4 = importer.load_module('bs4')
 BeautifulSoup = bs4.BeautifulSoup
 from urllib.request import urlopen
 from urllib.parse import urlparse
-
 
 def scrape_urls(url):
     try:
@@ -23,25 +26,21 @@ def scrape_urls(url):
     except:
         return []
 
-
-def process_input():
-    for line in sys.stdin:
-        line = line.strip()
-        page, state = line.split()
-        if page[-1] == '/':
-            page = page[:-1]
-        if state == '0':
-            state = int(state)
-        if state == 0:  # not crawled
-            print(page, state)
-            urls = scrape_urls(page)
-            if len(urls) > 0:
-                print(page, *urls)
-                for url in urls:
-                    print(url, 0)
-            else:
-                print(page, -1)
-        else:  # already crawled
-            print(page, 1)
-
-process_input()
+for line in sys.stdin:
+    line = line.strip()
+    page, state = line.split()
+    if page[-1] == '/':
+        page = page[:-1]
+    if state == '0':
+        state = int(state)
+    if state == 0:  # not crawled
+        print(page, state)
+        urls = scrape_urls(page)
+        if len(urls) > 0:
+            print(page, *urls)
+            for url in urls:
+                print(url, 0)
+        else:
+            print(page, -1)
+    else:  # already crawled
+        print(page, 1)

@@ -1,9 +1,21 @@
 #!/usr/bin/bash
 
+# Check if the correct number of arguments are provided
+if [ "$#" -ne 1 ]; then
+    echo "Usage: $0 <ITERATIONS>"
+    exit 1
+fi
+
+ITERATIONS=$1
+
 rm -r ./output
 mkdir ./output
 
 ############## WEB CRAWLER ##############
+
+# move input.txt to submit folder
+cp input.txt WebCrawler/submit/
+
 cd WebCrawler/submit
 echo "inside $(pwd)"
 
@@ -16,7 +28,11 @@ echo "inside $(pwd)"
 ./runner-script /opt/hadoop-3.2.1/share/hadoop/tools/lib/hadoop-streaming-3.2.1.jar 2 			../../WebCrawler/submit/output/finall
 # 				STREAMING JAR														ITERATIONS	INPUT DIR
 
+cd ../../
+
 ############## FINAL OUTPUT ############
-rm -r ../../output
-mkdir ../../output
-cp ./output/* ../../output/
+rm -r output
+mkdir output
+cp PageRank/MapReduce/output/* output/
+
+python visualize.py
