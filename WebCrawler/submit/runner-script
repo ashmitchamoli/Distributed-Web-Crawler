@@ -11,6 +11,8 @@ chmod +x reducer_1.py
 chmod +x mapper_2.py
 chmod +x reducer_2.py
 chmod +x reducer_3.py
+chmod +x mapper_4.py
+chmod +x reducer_4.py
 chmod +x library.mod
 
 

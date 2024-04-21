@@ -17,4 +17,6 @@ echo "inside $(pwd)"
 # 				STREAMING JAR														ITERATIONS	INPUT DIR
 
 ############## FINAL OUTPUT ############
+rm -r ../../output
+mkdir ../../output
 cp ./output/* ../../output/
